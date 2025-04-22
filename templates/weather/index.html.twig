@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+            height: 100vh;
+        }
+
+        .weather-container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .weather-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        #weather-info {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #weather-error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="weather-container">
+    <h1>Weather</h1>
+
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" placeholder="city" required>
+    <button id="get-weather">Get Weather</button>
+
+    <div id="weather-info"></div>
+    <div id="weather-error"></div>
+</div>
+
+<script>
+    $('#get-weather').on('click', function () {
+        const city = $('#city').val().trim();
+        if (city) {
+            $.ajax({
+                url: '/api/weather',
+                method: 'GET',
+                data: { city: city },
+                success: function (response) {
+                    if (response) {
+                        $('#weather-info').html(`
+                                <h2>Weather in ${response.city}, ${response.country}</h2>
+                                <p>Temperature: ${response.temperature}°C</p>
+                                <p>Contition: ${response.condition}</p>
+                                <p>Humidity: ${response.humidity}%</p>
+                                <p>Wind Speed: ${response.windSpeed}km/h</p>
+                                <p>Last Updated: ${response.lastUpdated}</p>
+                            `);
+                        $('#weather-error').html('');
+                    }
+                },
+                error: function (response) {
+                    $('#weather-info').html('');
+                    if (response.responseJSON) {
+                        $('#weather-error').html(`<p>${response.responseJSON.error}</p>`);
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

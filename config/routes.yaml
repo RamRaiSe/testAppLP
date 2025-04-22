@@ -1,0 +1,18 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+weather_index:
+    path:     /
+    controller: App\Controller\WeatherController::indexAction
+
+weather_logs:
+    path:     /__logs
+    controller: App\Controller\WeatherController::logsAction
+
+weather_rest:
+    type: attribute
+    prefix: /api
+    resource: App\Controller\Rest\WeatherRestController
